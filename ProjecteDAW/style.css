@@ -1,0 +1,24 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700);
+body {
+  font-family: 'Open Sans', 'sans-serif';
+  background-image:url("images/fondotest.jpg");
+   background-size: 100%;
+  background-repeat: no-repeat;
+}
+
+.navbar-nav > li > .dropdown-menu {
+  background-color: #202020;
+  min-width: 110px;
+}/*
+.navbar-nav > li > .dropdown-menu > li > .dropdown-header {
+  color: grey;
+}
+.navbar-nav > li > .categoria {
+  background-color: black;
+  color: white;
+  font-weight: bold;
+}*/
+
+a{
+  cursor: pointer;
+}
