@@ -55,9 +55,9 @@ class funcionsClass{
                 // output data of each row
                 while($row2 = $result2->fetch_assoc()) {
                   if($admin){
-                    echo '<li><a href="galeriaAdmin.php?album='.$row2['id'].'" class="dropdown-header" onclick="albumSelected(this);categoriaActual(\''.$categoria.'\')">'.$row2['nom'].'</a></li>';
+                    echo '<li><a href="galeriaAdmin.php?album='.$row2['id'].'" class="dropdown-header">'.$row2['nom'].'</a></li>';
                   }else{
-                    echo '<li><a href="galeria.php?album='.$row2['id'].'" class="dropdown-header" onclick="albumSelected(this);categoriaActual(\''.$categoria.'\')">'.$row2['nom'].'</a></li>';
+                    echo '<li><a href="galeria.php?album='.$row2['id'].'" class="dropdown-header">'.$row2['nom'].'</a></li>';
                   }
                 }
           }
@@ -212,18 +212,25 @@ class funcionsClass{
     }
   }
 
-  public function createGaleria($id_album,$admin){
+  public function createGaleria($id_album,$admin,$nomAlbum){
     try{
       $conn = $this->DBConnection();
       $sql = "SELECT * FROM fotografia WHERE id_album = '".$id_album."'";
           $result = $conn->query($sql);
 
           while($row = mysqli_fetch_array($result)){
-            echo '<a href="'.$row['url'].'" rel="lightbox[philippines]" title="title">';
-              echo '<img width="175px" height="150px" src="'.$row['url'].'"/>';
+            //$size = getimagesize($row['url']);
+            list($width, $height) = getimagesize($row['url']);
+            //echo $width.$height;
+            $widthOK = $width/6;
+            $heightOK = $height/6;
+            $heightDelete = $height/15.7;
+            //print_r($size[3]);
+            echo '<a href="'.$row['url'].'" rel="lightbox[philippines]" title="'.$nomAlbum.'">';
+              echo '<img style="padding-bottom:10px" class="fadeIn animated" width="'.$widthOK.'" height="'.$heightOK.'" src="'.$row['url'].'"/>';
               echo "</a> ";
               if($admin){
-                echo "<a style='position:relative; left: -25px; top: -55px' onclick='borrar(".$row['id'].")'>X</a>";
+                echo "<a style='position:relative; left: -28px; top: -".$heightDelete."px' onclick='borrar(".$row['id'].")'>X</a>";
               }
               
           }

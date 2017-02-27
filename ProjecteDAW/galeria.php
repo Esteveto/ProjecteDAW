@@ -8,6 +8,7 @@
     <meta charset="utf-8">
     <title></title>
     <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="animate.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -52,7 +53,7 @@
       <div id="gallery">
         <?php
           $idAlbum = $_GET["album"];
-          $funcions->createGaleria($idAlbum,false);
+          $funcions->createGaleria($idAlbum,false,$nomAlbum);
           /*$sql = "SELECT * FROM fotografia WHERE id_album = '".$_GET["album"]."'";
           $result = $conn->query($sql);
 

@@ -14,3 +14,10 @@ function categoriaActual(categoria){
 function borrar(id){
 	console.log(id);
 }
+
+$(document).ready(function(){
+	console.log("OK");
+    $("img").load(function(){
+        $(this).addClass("bounce");
+    });
+});
