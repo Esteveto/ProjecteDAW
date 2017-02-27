@@ -1,4 +1,4 @@
-function albumSelected(item){
+/*function albumSelected(item){
 	document.getElementById("albumSelected").innerHTML = item.text;
 }
 
@@ -9,5 +9,8 @@ function categoriaActual(categoria){
 		categories[i].style = "";
 	}
 	categoria1.style = " color:white; font-weight: bold;";
-}
+}*/
 
+function borrar(id){
+	console.log(id);
+}

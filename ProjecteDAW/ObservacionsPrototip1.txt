@@ -1,0 +1,2 @@
+Limitar quantitat de categories, redireccionar al afegir albums o categories.
+Afegir imatges amb url.

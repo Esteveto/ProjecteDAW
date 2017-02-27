@@ -9,7 +9,12 @@ body {
 .navbar-nav > li > .dropdown-menu {
   background-color: #202020;
   min-width: 110px;
-}/*
+  color:white;
+}
+.dropdown-menu>li>a{
+  color:#9d9d9d !important;
+}
+/*
 .navbar-nav > li > .dropdown-menu > li > .dropdown-header {
   color: grey;
 }
@@ -21,4 +26,10 @@ body {
 
 a{
   cursor: pointer;
+}
+
+.anadirForm{
+  margin: 0 auto 0 auto;
+  text-align: center;
+  width: 50%;
 }
