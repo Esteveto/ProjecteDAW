@@ -33,3 +33,7 @@ a{
   text-align: center;
   width: 50%;
 }
+
+#imgLike{
+  filter: grayScale(100%);
+}

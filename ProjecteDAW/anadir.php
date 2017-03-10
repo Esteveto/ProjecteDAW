@@ -43,14 +43,22 @@
         </form>
         <br>
         <form method="post" action="anadirAlbum.php" enctype="multipart/form-data">
-          <input type="text" name="categoriaPadre" placeholder="Categoria Padre">
+          <select name="categoriaPadre">
+            <?php
+            $funcions->createSelectCategories();
+            ?>
+          </select>
           <input type="text" name="album" placeholder="Nombre Album">
           <input type="file" name="imgs[]" multiple/>
           <input type="submit" name="submitBtn" value="Añadir Album">
         </form>
         <br>
         <form method="post" action="anadirFotosAlbum.php" enctype="multipart/form-data">
-          <input type="text" name="albumPadre" placeholder="Album Padre">
+          <select name="albumPadre">
+            <?php
+            $funcions->createSelectAlbums();
+            ?>
+          </select>
           <input type="file" name="imgs[]" multiple/>
           <input type="submit" name="submitBtn" value="Añadir fotografias Album">
         </form>

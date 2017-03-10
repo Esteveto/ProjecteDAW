@@ -42,7 +42,7 @@
         </div>
       </nav>
 
-      <div>
+      <div style="text-align:center">
         <?php
         $conn = $funcions->DBConnection();
         $nomAlbum = $funcions->nomAlbum();
@@ -50,7 +50,7 @@
         ?>
       </div>
 
-      <div id="gallery">
+      <div id="gallery" style="text-align:center">
         <?php
           $idAlbum = $_GET["album"];
           $funcions->createGaleria($idAlbum,false,$nomAlbum);

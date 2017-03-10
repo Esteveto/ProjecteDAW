@@ -165,8 +165,9 @@ class funcionsClass{
 
   private function insertURLImgs($path,$nomAlbum){
     $id_album = $this->getIDAlbum($nomAlbum);
-    $conn = $this->DBConnection();
+    
     try{
+      $conn = $this->DBConnection();
       $sql=("INSERT INTO fotografia(url,id_album) VALUES ('".$path."',".$id_album.")");
       /*$stmt->bind_param(1, $nom, $id_categoria);
       $stmt->execute();
@@ -212,6 +213,58 @@ class funcionsClass{
     }
   }
 
+  public function createSelectCategories(){
+    try{
+       $conn = $this->DBConnection();
+       $sql = "SELECT nom FROM categoria";
+       $result = $conn->query($sql);
+       while($row = mysqli_fetch_array($result)){
+          echo "<option value='".$row["nom"]."'>".$row["nom"]."</option>";
+       }
+    }catch(Exception $e){
+      var_dump($e);
+    }finally{
+      //$this->close();
+      $conn->close();
+    }
+  }
+
+  public function createSelectAlbums(){
+    try{
+       $conn = $this->DBConnection();
+       $sql = "SELECT nom FROM album";
+       $result = $conn->query($sql);
+       while($row = mysqli_fetch_array($result)){
+          echo "<option value='".$row["nom"]."'>".$row["nom"]."</option>";
+       }
+    }catch(Exception $e){
+      var_dump($e);
+    }finally{
+      //$this->close();
+      $conn->close();
+    }
+  }
+
+  public function deleteCategoia($idCategoria){
+    try{
+      $conn = $this->DBConnection();
+      $sql=("DELETE FROM categories WHERE id = '".$idCategoria."')");
+      /*$stmt->bind_param(1, $nom, $id_categoria);
+      $stmt->execute();
+      $result = $stmt->fetch_assoc();*/
+      if ($conn->query($sql) === TRUE) {
+              echo "categoria eliminada correctamente";
+          } else {
+              echo "Error: " . $sql . "<br>" . $conn->error;
+          }
+    }catch(Exception $e){
+      var_dump($e);
+    }finally{
+      //$this->close();
+      $conn->close();
+    }
+  }
+
   public function createGaleria($id_album,$admin,$nomAlbum){
     try{
       $conn = $this->DBConnection();
@@ -222,17 +275,27 @@ class funcionsClass{
             //$size = getimagesize($row['url']);
             list($width, $height) = getimagesize($row['url']);
             //echo $width.$height;
-            $widthOK = $width/6;
-            $heightOK = $height/6;
+            $defaultHeight = 350;
+            //echo $height;
+            $proporcion = $height/$defaultHeight;
+            //echo $proporcion;
+            if($width > 285){
+              $widthOK = $width/$proporcion;
+            }else{
+              $widthOK = $width/3.5;
+            }
+
+           
+            $heightOK = $height/3.5;
             $heightDelete = $height/15.7;
             //print_r($size[3]);
             echo '<a href="'.$row['url'].'" rel="lightbox[philippines]" title="'.$nomAlbum.'">';
-              echo '<img style="padding-bottom:10px" class="fadeIn animated" width="'.$widthOK.'" height="'.$heightOK.'" src="'.$row['url'].'"/>';
+              echo '<img style="padding:5px" class="fadeIn animated" width="'.$widthOK.'" height="'.$defaultHeight.'" src="'.$row['url'].'"/>';
               echo "</a> ";
+              //echo "<a style='position:relative; left: -75px; top:125px'><img id='imgLike' style='width:40px;height:40px;' src ='images/like.png'></img>  ".$row['num_likes']."</a>";
               if($admin){
-                echo "<a style='position:relative; left: -28px; top: -".$heightDelete."px' onclick='borrar(".$row['id'].")'>X</a>";
+                //echo "<a style='position:relative; left: -28px; top: -".$heightDelete."px' onclick='borrar(".$row['id'].")'>X</a>";
               }
-              
           }
     }catch(Exception $e){
       var_dump($e);

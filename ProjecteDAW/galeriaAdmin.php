@@ -42,14 +42,14 @@
         </div>
       </nav>
 
-      <div>
+      <div  style="text-align:center">
         <?php
         $nomAlbum = $funcions->nomAlbum();
         echo '<h3 id="albumSelected">'.$nomAlbum.'</h3>';
         ?>
       </div>
 
-      <div id="gallery">
+      <div id="gallery" style="text-align:center">
         <?php
           $idAlbum = $_GET["album"];
           $funcions->createGaleria($idAlbum,true,$nomAlbum);
