@@ -142,14 +142,18 @@ class funcionsClass{
 
           //Make sure we have a filepath
           if ($tmpFilePath != ""){
-          //Setup our new file path
-          $newFilePath = "images/" . $imgs['name'][$i];
+            //Setup our new file path
+            //$newFilePath = "images/" . $imgs['name'][$i];
+            $img = $imgs['name'][$i];
+            $ext = pathinfo($img, PATHINFO_EXTENSION);
+            $name = md5(uniqid(rand(), true)).".".$ext;
+            $newFilePath = "images/" .$name;
 
-          //Upload the file into the temp dir
-          if(move_uploaded_file($tmpFilePath, $newFilePath)) {
-            $this->insertURLImgs($newFilePath,$nomAlbum);
-            $conn = $this->DBConnection();
-            }
+            //Upload the file into the temp dir
+            if(move_uploaded_file($tmpFilePath, $newFilePath)) {
+              $this->insertURLImgs($newFilePath,$nomAlbum);
+              $conn = $this->DBConnection();
+              }
           }
         }
       } else {
@@ -195,14 +199,18 @@ class funcionsClass{
 
           //Make sure we have a filepath
           if ($tmpFilePath != ""){
-          //Setup our new file path
-          $newFilePath = "images/" . $imgs['name'][$i];
+            //Setup our new file path
+            //$newFilePath = "images/" . $imgs['name'][$i];
+            $img = $imgs['name'][$i];
+            $ext = pathinfo($img, PATHINFO_EXTENSION);
+            $name = md5(uniqid(rand(), true)).".".$ext;
+            $newFilePath = "images/" .$name;
 
-          //Upload the file into the temp dir
-          if(move_uploaded_file($tmpFilePath, $newFilePath)) {
-            $this->insertURLImgs($newFilePath,$nomAlbum);
-            $conn = $this->DBConnection();
-            }
+            //Upload the file into the temp dir
+            if(move_uploaded_file($tmpFilePath, $newFilePath)) {
+              $this->insertURLImgs($newFilePath,$nomAlbum);
+              $conn = $this->DBConnection();
+              }
           }
         }
     }catch(Exception $e){
@@ -245,10 +253,23 @@ class funcionsClass{
     }
   }
 
+  private function deleteALlImages($idAlbum){
+    try{
+      $conn = $this->DBConnection();
+      $sql = "DELETE FROM fotografia WHERE id_album = '".$idAlbum."'";
+      $conn->query($sql);
+    }catch(Exception $e){
+      var_dump($e);
+    }finally{
+      //$this->close();
+      $conn->close();
+    }
+  }
+
   public function deleteCategoia($idCategoria){
     try{
       $conn = $this->DBConnection();
-      $sql=("DELETE FROM categories WHERE id = '".$idCategoria."')");
+      $sql = "DELETE FROM categories WHERE id = '".$idCategoria."')";
       /*$stmt->bind_param(1, $nom, $id_categoria);
       $stmt->execute();
       $result = $stmt->fetch_assoc();*/
@@ -257,6 +278,19 @@ class funcionsClass{
           } else {
               echo "Error: " . $sql . "<br>" . $conn->error;
           }
+    }catch(Exception $e){
+      var_dump($e);
+    }finally{
+      //$this->close();
+      $conn->close();
+    }
+  }
+
+  private function deleteImage($url){
+    try{
+      $conn = $this->DBConnection();
+      $sql = "DELETE FROM fotografia WHERE url = '".$url."'";
+      $conn->query($sql);
     }catch(Exception $e){
       var_dump($e);
     }finally{
@@ -283,19 +317,35 @@ class funcionsClass{
               $widthOK = $width/$proporcion;
             }else{
               $widthOK = $width/3.5;
-            }
-
-           
+            }           
             $heightOK = $height/3.5;
             $heightDelete = $height/15.7;
             //print_r($size[3]);
             echo '<a href="'.$row['url'].'" rel="lightbox[philippines]" title="'.$nomAlbum.'">';
-              echo '<img style="padding:5px" class="fadeIn animated" width="'.$widthOK.'" height="'.$defaultHeight.'" src="'.$row['url'].'"/>';
-              echo "</a> ";
-              //echo "<a style='position:relative; left: -75px; top:125px'><img id='imgLike' style='width:40px;height:40px;' src ='images/like.png'></img>  ".$row['num_likes']."</a>";
-              if($admin){
-                //echo "<a style='position:relative; left: -28px; top: -".$heightDelete."px' onclick='borrar(".$row['id'].")'>X</a>";
+            echo '<img style="padding:5px" class="fadeIn animated" width="'.$widthOK.'" height="'.$defaultHeight.'" src="'.$row['url'].'"/>';
+            echo "</a> ";
+            //echo "<a style='position:relative; left: -75px; top:125px'><img id='imgLike' style='width:40px;height:40px;' src ='images/like.png'></img>  ".$row['num_likes']."</a>";
+            if($admin){
+              echo "<a style='position:relative; left: -65px; top:-125px' href='?album=".$id_album."&imageUrl=".$row['url']."'><img id='imgLike' style='width:30px;height:30px;' src ='images/close.svg'></img></a>";
+              if(isset($_GET['imageUrl']))
+              {
+                unlink($_GET['imageUrl']);
+                $this->deleteImage($_GET['imageUrl']);
+                header('Location: http://localhost/projectedaw/galeriaAdmin.php?album='.$id_album.'');
               }
+              /*echo '<form method="post">';
+              echo '<input type="text" style="display:none" name="image" value="'.$row['url'].'">';
+              echo '<input name="delete" type="submit" value="'.$row['url'].'">';
+              echo '</form>';
+              if(isset($_POST['delete'])){
+                unlink($_POST['image']);
+                $this->deleteImage($_POST['image']);
+                header('Location: http://localhost/projectedaw/galeriaAdmin.php?album='.$id_album.'');
+                //echo $_POST['image'];
+                //echo $row['url'];
+              }*/
+              //echo "<a style='position:relative; left: -28px; top: -".$heightDelete."px' onclick='borrar(".$row['id'].")'>X</a>";
+            }
           }
     }catch(Exception $e){
       var_dump($e);
