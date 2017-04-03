@@ -34,6 +34,10 @@ a{
   width: 50%;
 }
 
-#imgLike{
+.imgLike{
   filter: grayScale(100%);
+}
+
+.imgLiked{
+  filter: grayScale(0%);
 }

@@ -36,12 +36,14 @@
       		</ul>
       	</div>
       </nav>
+      <p>Añadir Categoria</p>
       <div clas="row-fluid" class=""> 
         <form method="get" action="anadirCategoria.php">
           <input type="text" name="categoria" placeholder="Nombre Categoria">
           <input type="submit" value="Añadir Categoria">
         </form>
         <br>
+        <p>Añadir Album</p>
         <form method="post" action="anadirAlbum.php" enctype="multipart/form-data">
           <select name="categoriaPadre">
             <?php
@@ -53,6 +55,7 @@
           <input type="submit" name="submitBtn" value="Añadir Album">
         </form>
         <br>
+        <p>Añadir imagenes a album</p>
         <form method="post" action="anadirFotosAlbum.php" enctype="multipart/form-data">
           <select name="albumPadre">
             <?php
@@ -61,6 +64,28 @@
           </select>
           <input type="file" name="imgs[]" multiple/>
           <input type="submit" name="submitBtn" value="Añadir fotografias Album">
+        </form>
+        <p>Eliminar album</p>
+        <form method="post" action="eliminarAlbum.php" enctype="multipart/form-data">
+          <select name="album">
+            <?php
+            $funcions->createSelectAlbums();
+            ?>
+          </select>
+          <input type="submit" name="submitBtn" value="Eliminar Album">
+        </form>
+        <p>Eliminar categoria</p>
+        <form method="post" action="eliminarCategoria.php" enctype="multipart/form-data">
+          <select name="categoria">
+            <?php
+            $funcions->createSelectCategories();
+            ?>
+          </select>
+          <input type="submit" name="submitBtn" value="Eliminar Categoria">
+        </form>
+        <form method="post" action="testInfo.php" enctype="multipart/form-data">
+
+          <input type="submit" name="submitBtn" value="Info">
         </form>
       </div>
     </div>

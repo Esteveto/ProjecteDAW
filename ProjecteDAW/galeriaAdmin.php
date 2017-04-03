@@ -49,7 +49,7 @@
         ?>
       </div>
 
-      <div id="gallery" style="text-align:center">
+      <div id="gallery" style="text-align:center; margin-left:10px; margin-right:10px;">
         <?php
           $idAlbum = $_GET["album"];
           $funcions->createGaleria($idAlbum,true,$nomAlbum);

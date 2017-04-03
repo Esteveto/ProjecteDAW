@@ -168,9 +168,10 @@ class funcionsClass{
   }
 
   private function insertURLImgs($path,$nomAlbum){
-    $id_album = $this->getIDAlbum($nomAlbum);
+    
     
     try{
+      $id_album = $this->getIDAlbum($nomAlbum);
       $conn = $this->DBConnection();
       $sql=("INSERT INTO fotografia(url,id_album) VALUES ('".$path."',".$id_album.")");
       /*$stmt->bind_param(1, $nom, $id_categoria);
@@ -266,18 +267,47 @@ class funcionsClass{
     }
   }
 
-  public function deleteCategoia($idCategoria){
+  public function deleteAlbum($nomAlbum){
+    try{
+    $id_album = $this->getIDAlbum($nomAlbum);
+    $this->deleteALlImages($id_album);
+    $conn = $this->DBConnection();
+    $sql = "DELETE FROM album WHERE id = '".$id_album."'";
+    $conn->query($sql);
+    //header('Location: http://localhost/projectedaw/anadir.php');
+    }catch(Exception $e){
+      var_dump($e);
+    }finally{
+      //$this->close();
+      $conn->close();
+    }
+
+  }
+
+  private function deleteAllAlbums($idCategoria){
     try{
       $conn = $this->DBConnection();
-      $sql = "DELETE FROM categories WHERE id = '".$idCategoria."')";
-      /*$stmt->bind_param(1, $nom, $id_categoria);
-      $stmt->execute();
-      $result = $stmt->fetch_assoc();*/
-      if ($conn->query($sql) === TRUE) {
-              echo "categoria eliminada correctamente";
-          } else {
-              echo "Error: " . $sql . "<br>" . $conn->error;
-          }
+      $sql = "SELECT * FROM album WHERE id_categoria = '".$idCategoria."'";
+      $result = $conn->query($sql);
+      while($row = mysqli_fetch_array($result)){
+        $this->deleteAlbum($row['nom']);
+      }
+    }catch(Exception $e){
+      var_dump($e);
+    }finally{
+      //$this->close();
+      $conn->close();
+    }
+  }
+
+  public function deleteCategoria($nomCategoria){
+    try{
+      $idCategoria = $this->getIDCategoria($nomCategoria);
+      $this->deleteAllAlbums($idCategoria);
+      $conn = $this->DBConnection();
+      //echo $idCategoria;
+      $sql = "DELETE FROM categoria WHERE id = '".$idCategoria."'";
+      $conn->query($sql);
     }catch(Exception $e){
       var_dump($e);
     }finally{
@@ -320,31 +350,89 @@ class funcionsClass{
             }           
             $heightOK = $height/3.5;
             $heightDelete = $height/15.7;
+          /*<div class="personaje-item">
+                <div class="personaje-item-image">
+                    <a href="#"><img src="assets/images/shop/3.png" alt=""/></a>
+                    <div class="personaje-item-hidden">
+                      <a href="#" style="font-size: 15px; color: white; text-align: center;"><img src="assets/images/shop/3.png" alt=""/></a>
+                    </div>
+                </div>
+            </div>
+            .personaje-item {
+                margin: 0 0 35px;
+                 border: 2px solid;
+                 border-color: white;
+                 border-radius: 4px;
+            }
+            .personaje-item:hover {
+                margin: 0 0 35px;
+                border: 2px solid;
+                 border-color: grey;
+                 border-radius: 6px;
+            }
+            .personaje-item-image {
+                position: relative;
+                overflow: hidden;
+                margin: 0 0 20px;
+            }
+            .personaje-item-image img {
+                width: 100%;
+            }
+            .personaje-item-image:hover .personaje-item-hidden {
+                -webkit-transform: translateY(-100%);
+                        transform: translateY(-100%);
+
+            }
+            .personaje-item-hidden {
+                position: absolute;
+                width: 100%;
+                top: 100%;
+                -webkit-transition: all 0.7s ease-in-out 0s;
+                        transition: all 0.7s ease-in-out 0s;
+            }*/
+
             //print_r($size[3]);
+
+            echo '<div style="display:inline">';
             echo '<a href="'.$row['url'].'" rel="lightbox[philippines]" title="'.$nomAlbum.'">';
-            echo '<img style="padding:5px" class="fadeIn animated" width="'.$widthOK.'" height="'.$defaultHeight.'" src="'.$row['url'].'"/>';
-            echo "</a> ";
-            //echo "<a style='position:relative; left: -75px; top:125px'><img id='imgLike' style='width:40px;height:40px;' src ='images/like.png'></img>  ".$row['num_likes']."</a>";
+            echo '<img style="padding:5px;" class="fadeIn animated img" width="'.$widthOK.'" height="'.$defaultHeight.'" src="'.$row['url'].'"/>';
+            echo "</a>";
+            if(!$admin){
+              /*echo '<div>';
+              echo "<a><img id='imgLike' style='width:40px;height:40px;' src ='images/like.png'></img>  ".$row['num_likes']."</a>";
+              echo '</div>';*/
+              $cookie_name = 'cookie'.$row['id'];
+              //echo $cookie_name;
+              if(isset($_COOKIE[$cookie_name])){
+                if($_COOKIE[$cookie_name] == "false"){
+                  echo "<a style='position:relative; left: -80px; top:125px'>
+                <img id='cookie".$row['id']."' class='imgLike likeimgs' style='width:40px;height:40px;margin-left:-10px;margin-right:-10px;' src ='images/like.png'></img>
+                </a>";
+                }else{
+                  echo "<a style='position:relative; left: -80px; top:125px'>
+                <img id='cookie".$row['id']."' class='imgLiked likeimgs' style='width:40px;height:40px;margin-left:-10px;margin-right:-10px;' src ='images/like.png'></img>
+                </a>";
+                }
+              }else{
+                echo "<a style='position:relative; left: -80px; top:125px'>
+                <img id='cookie".$row['id']."' class='imgLike likeimgs' style='width:40px;height:40px;margin-left:-10px;margin-right:-10px;' src ='images/like.png'></img>
+                </a>";
+              }
+              echo '</div>'; 
+            }
+            
             if($admin){
-              echo "<a style='position:relative; left: -65px; top:-125px' href='?album=".$id_album."&imageUrl=".$row['url']."'><img id='imgLike' style='width:30px;height:30px;' src ='images/close.svg'></img></a>";
+              echo "<a class='deleteImageButton' style='position:relative; left: -65px; top:-125px' href='?album=".$id_album."&imageUrl=".$row['url']."'>
+              <img style='width:30px;height:30px;' src ='images/close.svg'></img>
+              </a>";
+              
+              echo '</div>';
               if(isset($_GET['imageUrl']))
               {
                 unlink($_GET['imageUrl']);
                 $this->deleteImage($_GET['imageUrl']);
                 header('Location: http://localhost/projectedaw/galeriaAdmin.php?album='.$id_album.'');
               }
-              /*echo '<form method="post">';
-              echo '<input type="text" style="display:none" name="image" value="'.$row['url'].'">';
-              echo '<input name="delete" type="submit" value="'.$row['url'].'">';
-              echo '</form>';
-              if(isset($_POST['delete'])){
-                unlink($_POST['image']);
-                $this->deleteImage($_POST['image']);
-                header('Location: http://localhost/projectedaw/galeriaAdmin.php?album='.$id_album.'');
-                //echo $_POST['image'];
-                //echo $row['url'];
-              }*/
-              //echo "<a style='position:relative; left: -28px; top: -".$heightDelete."px' onclick='borrar(".$row['id'].")'>X</a>";
             }
           }
     }catch(Exception $e){
@@ -353,6 +441,89 @@ class funcionsClass{
       //$this->close();
       $conn->close();
     }
+  }
+
+  public function testInfo(){
+    $cookie_name = "user2";
+      $cookie_value = "John Doe";
+      setcookie($cookie_name, $cookie_value, time() + (86400 * 30), "/"); // 86400 = 1 day
+
+      if(!isset($_COOKIE[$cookie_name])) {
+           echo "Cookie named '" . $cookie_name . "' is not set!";
+      } else {
+           echo "Cookie '" . $cookie_name . "' is set!<br>";
+           echo "Value is: " . $_COOKIE[$cookie_name];
+      }
+  }
+
+  private function getLikesPhoto($idPhoto){
+    $result2;
+    try{
+      
+      $conn = $this->DBConnection();
+      $sql = "SELECT num_likes FROM fotografia WHERE id = ".$idPhoto."";
+      $result = $conn->query($sql);
+      $row = mysqli_fetch_array($result);
+      $result2 = $row['num_likes'];
+      
+    }catch(Exception $e){
+      var_dump($e);
+    }finally{
+      //$this->close();
+      $conn->close();
+    }
+    return $result2;
+  }
+
+  private function setLikePhoto($id,$like){
+    $result;
+    try{
+      $idPhoto = substr($id, 6);
+      //echo $idPhoto;
+      $numLikes = $this->getLikesPhoto($idPhoto);
+      if($like == true){
+        $numLikes = $numLikes+1;
+      }else if ($like == false){
+        $numLikes = $numLikes-1;
+      }
+      
+      $conn = $this->DBConnection();
+      $sql = "UPDATE fotografia SET num_likes = ".$numLikes." WHERE id = ".$idPhoto."";
+      $result = $conn->query($sql);
+    }catch(Exception $e){
+      var_dump($e);
+    }finally{
+      //$this->close();
+      $conn->close();
+    }
+  }
+
+  public function setLike($id){
+    $cookie_name = $id;
+    $result;
+    if(!isset($_COOKIE[$cookie_name])) {
+      $cookie_value = "true";
+      setcookie($cookie_name, $cookie_value, time() + 10, "/"); 
+      //$result = "Cookie named '" . $cookie_name . "' set!";
+      $result = $cookie_value;
+      $this->setLikePhoto($id,true);
+    }else{
+      if($_COOKIE[$cookie_name] == "true"){
+      $cookie_value = "false";
+      setcookie($cookie_name, $cookie_value, time() + 10, "/"); 
+         //echo "Cookie '" . $cookie_name . "' is set!<br>";
+      $result = $cookie_value;
+      $this->setLikePhoto($id,false);
+      }else{
+      $cookie_value = "true";
+      setcookie($cookie_name, $cookie_value, time() + 10, "/"); 
+         //echo "Cookie '" . $cookie_name . "' is set!<br>";
+      $result = $cookie_value;
+      $this->setLikePhoto($id,true);
+      }
+    }
+
+    return $result;
   }
 
   
