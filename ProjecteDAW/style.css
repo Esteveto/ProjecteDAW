@@ -1,19 +1,81 @@
-@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700);
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+@import url('https://fonts.googleapis.com/css?family=Josefin+Slab');
+@import url('https://fonts.googleapis.com/css?family=Lora');
+@import url('https://fonts.googleapis.com/css?family=Roboto+Mono');
 body {
-  font-family: 'Open Sans', 'sans-serif';
-  background-image:url("images/fondotest.jpg");
-   background-size: 100%;
+  font-family: 'Roboto Mono', monospace !important;
+  /*background-image:url("images/fondo4.jpg");*/
+  background-size: 100%;
+  background-attachment: fixed;
   background-repeat: no-repeat;
 }
 
-.navbar-nav > li > .dropdown-menu {
-  background-color: #202020;
+.indexImg{
+  width:100%;
+  height: 100%;
+  background-image:url("images/fondo4.jpg");
+  background-size: 100%;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+/************************************/
+/**************NavBar****************/
+/************************************/
+.navbarNoIndex{
+  border-radius: 0px !important;
+  border-bottom-color: black !important; 
+  border-bottom-style: solid !important;
+  border-bottom-width: 1px !important;
+}
+.navbar{
+  /*background-color: white;*/
+  background: rgba(255,255,255,0.6);
+  border-radius: 4px;
+}
+.icon-bar{
+  background-color:black;
+}
+.navbar-header > a{
+  color:black;
+}
+
+.navbar-header > a:hover{
+  color:#607D8B;
+}
+
+.nav > li > a{
+  color:black;
+  text-decoration: none;
+  /*cursor: default;*/
+}
+.navbar-nav > li > .dropdownIndex {
+  background: rgba(255,255,255,1) !important;
   min-width: 110px;
-  color:white;
+  border: 0px;
 }
-.dropdown-menu>li>a{
-  color:#9d9d9d !important;
+.navbar-nav > li > .dropdownMenuIndex {
+  background: rgba(255,255,255,0.4) !important;
+  min-width: 110px;
+  border: 0px;
 }
+
+.navbar-nav > li > .dropdownIndex > li > .dropdown-header:hover {
+  background: rgba(255,255,255,0.4) !important;
+  min-width: 110px;
+  border: 0px;
+}
+
+.nav > li > a:hover{
+  background-color: transparent !important;
+  color:#607D8B;
+}
+
+.active{
+  border-bottom-color: black !important; 
+  border-bottom-style: solid !important;
+  border-bottom-width: 2px !important;
+}
+
 /*
 .navbar-nav > li > .dropdown-menu > li > .dropdown-header {
   color: grey;
@@ -24,9 +86,14 @@ body {
   font-weight: bold;
 }*/
 
-a{
+/*a{
   cursor: pointer;
-}
+  text-decoration: none;
+}*/
+
+/***************************/
+/********Suscripcion********/
+/**************************/
 
 .anadirForm{
   margin: 0 auto 0 auto;
@@ -34,10 +101,86 @@ a{
   width: 50%;
 }
 
+/*******************************/
+/***********Galeria*************/
+/******************************/
+.containerImg{
+  position:relative;
+  display: inline;
+  transition: all 0.3s linear;
+}
+
+.containerImg:hover > .aContainerImg > .imgs{
+  filter:brightness(0.5);
+  transition: all 0.3s linear;
+}
+
+
+.imgs:hover{
+  /*transform:scale(1.03);
+  border-style: solid;
+  border-width: 0.01px;*/
+  /*transition: all 0.3s linear;
+  filter:brightness(0.5);*/
+}
+
+.containerImg:hover > .likeimgs{
+  opacity: 1;
+  transition: all 0.3s linear;
+}
+.containerImg:hover > .numLikes{
+  opacity: 1;
+  filter:brightness(1);
+  transition: all 0.3s linear;
+}
+
+.imgs{
+  margin:5px;
+  transition: all 0.3s linear;
+}
+
 .imgLike{
   filter: grayScale(100%);
+  transition: all 0.3s linear;
 }
 
 .imgLiked{
   filter: grayScale(0%);
+  transform:scale(1.1);
+  transition: all 0.3s linear;
 }
+
+.numLikes{
+  position:absolute;
+  left: 80px;
+  top: 120px;
+  color: white;
+  text-decoration: none;
+  opacity: 0;
+  transition: all 0.3s linear;
+}
+
+.numLikes:hover{
+  color:white;
+  text-decoration: none;
+  transition: all 0.3s linear;
+}
+
+.likeimgs{
+  width:35px;
+  height:35px;
+  margin-left:-10px;
+  margin-right:-10px;
+  opacity:0;
+  position:absolute;
+  left: 45px;
+  top: 120px;
+  cursor: pointer;
+  transition: all 0.3s linear;
+}
+
+.likeimgs:hover{
+  filter: brightness(0.7);
+  transition: all 0.3s linear;
+}
+

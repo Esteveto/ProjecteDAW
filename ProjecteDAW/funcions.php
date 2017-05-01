@@ -12,9 +12,9 @@ class funcionsClass{
 
   }
 
-  private function close($stmt){
-    $stmt = null;
+  private function close(){
     $this->conn = null;
+    return null;
   }
 
   public function nomAlbum(){
@@ -32,12 +32,29 @@ class funcionsClass{
     }catch(Exception $e){
       var_dump($e);
     }finally{
-      $this->close($stmt);
+      $stmt = $this->close();
     }
     return $result;
   }
 
-  public function createNavBar($admin){
+  public function createNavBar($admin, $categoriaActive){
+    if($categoriaActive == ""){
+      echo '<nav class="navbar">';
+    }else{
+      echo '<nav class="navbar navbarNoIndex">';
+    }
+    echo '<div class="navbar-header">
+            <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".js-navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+          <a class="navbar-brand" href="indexPublic.php">Mariona Dalmau</a>
+        </div>
+
+        <div class="collapse navbar-collapse js-navbar-collapse">
+          <ul class="nav navbar-nav navbar-right">';
     try{
       $this->connect();
       $stmt = $this->conn->prepare("SELECT * FROM categoria");
@@ -46,9 +63,22 @@ class funcionsClass{
 
       if ($result) {
         foreach ($result as $key => $value) {
-          echo "<li class='dropdown'>
+            if($categoriaActive == $value['id']){
+              echo "<li class='dropdown active'>
                 <a href='#' class='dropdown-toggle' id='".$value['nom']."' data-toggle='dropdown' >".$value['nom']."</a>
-                <ul class='dropdown-menu'>";
+                ";
+            }
+          else{
+            echo "<li class='dropdown'>
+                <a href='#' class='dropdown-toggle' id='".$value['nom']."' data-toggle='dropdown' >".$value['nom']."</a>
+                ";
+          }
+          if($categoriaActive != ""){
+            echo "<ul class='dropdown-menu '>";
+          }else{
+            echo "<ul class='dropdown-menu dropdownMenuIndex'>";
+          }
+          
 
           $stmt2 = $this->conn->prepare("SELECT * FROM album where id_categoria = ?");
           $bindPos = 0;
@@ -58,26 +88,44 @@ class funcionsClass{
           
           if ($result2) {
             foreach ($result2 as $key => $value) {
+              if($categoriaActive != ""){
+                if($admin){
+                  echo '<li><a href="galeriaAdmin.php?album='.$value['id'].'" class="dropdown-header">'.$value['nom'].'</a></li>';
+                }else{
+                  echo '<li><a href="galeria.php?album='.$value['id'].'" class="dropdown-header">'.$value['nom'].'</a></li>';
+                }
+            }else{
               if($admin){
-                echo '<li><a href="galeriaAdmin.php?album='.$value['id'].'" class="dropdown-header">'.$value['nom'].'</a></li>';
-              }else{
-                echo '<li><a href="galeria.php?album='.$value['id'].'" class="dropdown-header">'.$value['nom'].'</a></li>';
-              }
+                  echo '<li><a href="galeriaAdmin.php?album='.$value['id'].'" class="dropdown-header dropdownIndex">'.$value['nom'].'</a></li>';
+                }else{
+                  echo '<li><a href="galeria.php?album='.$value['id'].'" class="dropdown-header dropdownIndex">'.$value['nom'].'</a></li>';
+                }
+            }
             }
           }
           echo "</ul></li>";
         }
+        if($categoriaActive == "suscripcion"){
+          echo "<li class='active'><a href='suscripcion.php'>Suscribirse</a></li>";
+        }else{
+          echo "<li><a href='suscripcion.php'>Suscribirse</a></li>";
+        }
+        
         if($admin){
         echo "<li><a href='anadir.php'>Añadir</a></li>";
+        
         }
       }else {
           echo "0 results";
       }
+      echo '</ul>
+        </div>
+      </nav>';
 
     }catch(Exception $e){
       var_dump($e);
     }finally{
-      $this->close($stmt);
+      $stmt = $this->close();
     }
   }
 
@@ -91,7 +139,7 @@ class funcionsClass{
     }catch(Exception $e){
       var_dump($e);
     }finally{
-      $this->close($stmt);
+      $stmt = $this->close();
     }
   }
 
@@ -108,9 +156,27 @@ class funcionsClass{
     }catch(Exception $e){
       var_dump($e);
     }finally{
-      $this->close($stmt);
+      $stmt = $this->close();
     }
     return $result;
+  }
+
+  public function getCategoriaAlbum($idAlbum){
+    $idCategoria;
+    try{
+      $this->connect();
+      $stmt = $this->conn->prepare("SELECT id_categoria FROM album WHERE id = ?");
+      $bindPos = 0;
+      $stmt->bindParam(++$bindPos, $idAlbum, PDO::PARAM_INT);
+      $stmt->execute();
+      $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+      $idCategoria = $result[0]['id_categoria'];
+    }catch(Exception $e){
+      var_dump($e);
+    }finally{
+      $stmt = $this->close();
+    }
+    return $idCategoria;
   }
 
   public function getIDCategoria($nomCategoria){
@@ -126,7 +192,7 @@ class funcionsClass{
     }catch(Exception $e){
       var_dump($e);
     }finally{
-      $this->close($stmt);
+      $stmt = $this->close();
     }
     return $result;
   }
@@ -159,7 +225,6 @@ class funcionsClass{
             //Upload the file into the temp dir
             if(move_uploaded_file($tmpFilePath, $newFilePath)) {
               $this->insertURLImgs($newFilePath,$nomAlbum);
-              $conn = $this->DBConnection();
               }
           }
         }
@@ -167,7 +232,7 @@ class funcionsClass{
     }catch(Exception $e){
       var_dump($e);
     }finally{
-      $this->close($stmt);
+      $stmt = $this->close();
     }
   }
 
@@ -183,7 +248,7 @@ class funcionsClass{
     }catch(Exception $e){
       var_dump($e);
     }finally{
-      $this->close($stmt);
+      $stmt = $this->close();
     }
   }
 
@@ -227,7 +292,7 @@ class funcionsClass{
     }catch(Exception $e){
       var_dump($e);
     }finally{
-      $this->close($stmt);
+      $stmt = $this->close();
     }
   }
 
@@ -243,7 +308,7 @@ class funcionsClass{
     }catch(Exception $e){
       var_dump($e);
     }finally{
-      $this->close($stmt);
+      $stmt = $this->close();
     }
   }
 
@@ -257,14 +322,14 @@ class funcionsClass{
     }catch(Exception $e){
       var_dump($e);
     }finally{
-      $this->close($stmt);
+      $stmt = $this->close();
     }
   }
 
   public function deleteAlbum($nomAlbum){
     try{
-    $id_album = $this->getIDAlbum($nomAlbum);
-    $this->deleteALlImages($id_album);
+    $idAlbum = $this->getIDAlbum($nomAlbum);
+    $this->deleteALlImages($idAlbum);
     $this->connect();
     $stmt = $this->conn->prepare("DELETE FROM album WHERE id = ?");
     $bindPos = 0;
@@ -273,7 +338,7 @@ class funcionsClass{
     }catch(Exception $e){
       var_dump($e);
     }finally{
-      $this->close($stmt);
+      $stmt = $this->close();
     }
 
   }
@@ -292,7 +357,7 @@ class funcionsClass{
     }catch(Exception $e){
       var_dump($e);
     }finally{
-      $this->close($stmt);
+      $stmt = $this->close();
     }
   }
 
@@ -308,7 +373,7 @@ class funcionsClass{
     }catch(Exception $e){
       var_dump($e);
     }finally{
-      $this->close($stmt);
+      $stmt = $this->close();
     }
   }
 
@@ -322,7 +387,7 @@ class funcionsClass{
     }catch(Exception $e){
       var_dump($e);
     }finally{
-      $this->close($stmt);
+      $stmt = $this->close();
     }
   }
 
@@ -350,31 +415,23 @@ class funcionsClass{
         $heightOK = $height/3.5;
         $heightDelete = $height/15.7;
 
-        echo '<div style="display:inline">';
-        echo '<a href="'.$value['url'].'" rel="lightbox[philippines]" title="'.$nomAlbum.'">';
-        echo '<img style="padding:5px;" class="fadeIn animated img" width="'.$widthOK.'" height="'.$defaultHeight.'" src="'.$value['url'].'"/>';
+        echo '<div class="containerImg">';
+        echo '<a class="aContainerImg" href="'.$value['url'].'" rel="lightbox[philippines]" title="'.$nomAlbum.'">';
+        echo '<img class="fadeIn animated imgs" width="'.$widthOK.'" height="'.$defaultHeight.'" src="'.$value['url'].'"/>';
         echo "</a>";
+
         if(!$admin){
-          /*echo '<div>';
-          echo "<a><img id='imgLike' style='width:40px;height:40px;' src ='images/like.png'></img>  ".$row['num_likes']."</a>";
-          echo '</div>';*/
           $cookie_name = 'cookie'.$value['id'];
-          //echo $cookie_name;
           if(isset($_COOKIE[$cookie_name])){
             if($_COOKIE[$cookie_name] == "false"){
-              echo "<a style='position:relative; left: -80px; top:125px'>
-            <img id='cookie".$value['id']."' class='imgLike likeimgs' style='width:40px;height:40px;margin-left:-10px;margin-right:-10px;' src ='images/like.png'></img>
-            </a>";
+              echo "<img id='cookie".$value['id']."' class='imgLike likeimgs' src ='images/corazon3.png'></img>";
             }else{
-              echo "<a style='position:relative; left: -80px; top:125px'>
-            <img id='cookie".$value['id']."' class='imgLiked likeimgs' style='width:40px;height:40px;margin-left:-10px;margin-right:-10px;' src ='images/like.png'></img>
-            </a>";
+              echo "<img id='cookie".$value['id']."' class='imgLiked likeimgs' src ='images/corazon4.png'></img>";
             }
           }else{
-            echo "<a style='position:relative; left: -80px; top:125px'>
-            <img id='cookie".$value['id']."' class='imgLike likeimgs' style='width:40px;height:40px;margin-left:-10px;margin-right:-10px;' src ='images/like.png'></img>
-            </a>";
+            echo "<img id='cookie".$value['id']."' class='imgLike likeimgs' src ='images/corazon3.png'></img>";
           }
+          echo '<a class="numLikes" id="numLikes'.$value["id"].'">'.$value['num_likes'].'</a>';
           echo '</div>'; 
         }
         
@@ -395,7 +452,7 @@ class funcionsClass{
     }catch(Exception $e){
       var_dump($e);
     }finally{
-      $this->close($stmt);
+      $stmt = $this->close();
     }
   }
 
@@ -412,9 +469,9 @@ class funcionsClass{
     }catch(Exception $e){
       var_dump($e);
     }finally{
-      $this->close($stmt);
+      $stmt = $this->close();
     }
-    return $result2;
+    return intval($result2);
   }
 
   private function setLikePhoto($id,$like){
@@ -422,22 +479,27 @@ class funcionsClass{
     try{
       $idPhoto = substr($id, 6);
       //echo $idPhoto;
+      //echo $like;
       $numLikes = $this->getLikesPhoto($idPhoto);
+      //echo "<br>Likes Actuals: ".$numLikes;
       if($like == true){
         $numLikes = $numLikes+1;
+        //echo "<br>Num Likes".$numLikes;
       }else if ($like == false){
         $numLikes = $numLikes-1;
+        //echo "<br>Num Likes".$numLikes;
       }
       $this->connect();
-      $stmt = $this->conn->prepare("UPDATE fotografia SET num_likes = ? WHERE id = ? ");
+      $stmt = $this->conn->prepare("UPDATE fotografia SET num_likes = ? WHERE id = ?");
       $bindPos = 0;
       $stmt->bindParam(++$bindPos, $numLikes, PDO::PARAM_INT);
-      $stmt->bindParam(++$bindPos, $id, PDO::PARAM_INT);
+      $stmt->bindParam(++$bindPos, $idPhoto, PDO::PARAM_INT);
       $stmt->execute();
+
     }catch(Exception $e){
       var_dump($e);
     }finally{
-      $this->close($stmt);
+      $stmt = $this->close();
     }
   }
 
@@ -466,6 +528,104 @@ class funcionsClass{
       }
     }
     return $result;
+  }
+
+  private function getEmails(){
+    $result;
+    try{
+      $this->connect();
+      $stmt = $this->conn->prepare("SELECT email FROM emails");
+      $stmt->execute();
+      $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }catch(Exception $e){
+      var_dump($e);
+    }finally{
+      $stmt = $this->close();
+    }
+    return $result;
+  }
+
+  public function sendMail($subject,$body){
+
+    require_once("Swiftmailer/Swift-5.1.0/lib/swift_required.php");
+
+    $emails = $this->getEmails();
+    $emails_to_send = array();
+    foreach ($emails as $key => $value) {
+      $emails_to_send[$value['email']] = "receiver";
+      //array_push($emails_to_send,$value['email']);
+    }
+
+    try{
+      $transport = \Swift_SmtpTransport::newInstance('smtp.gmail.com', 465,'ssl')->setUsername('estevedalmau1@gmail.com')->setPassword('esteve06');
+
+      $mailer = \Swift_Mailer::newInstance($transport);
+      $message = \Swift_Message::newInstance($subject)
+         ->setFrom(array('estevedalmau1@gmail.com' => 'Mariona Dalmau Info'))
+         ->setTo($emails_to_send)
+         ->setBody($body, 'text/html');
+      //$result = $mailer->send($message);
+    }catch(Exception $ex){
+        //die($ex->getMessage()); //Això no funciona per algun motiu....
+    }
+  }
+
+  ### Funciones Suscribirse/Desuscribirse ###
+
+  public function suscribirse($email){
+    $result;
+    try{
+      $exist = $this->getEmail($email);
+      if($exist == ""){
+        $this->connect();
+        $stmt = $this->conn->prepare("INSERT INTO emails (email) VALUES (?)");
+        $bindPos = 0;
+        $stmt->bindParam(++$bindPos, $email, PDO::PARAM_STR);
+        $stmt->execute();
+      }
+    }catch(Exception $e){
+      var_dump($e);
+    }finally{
+      $stmt = $this->close();
+    }
+  }
+
+  public function getEmail($email){
+    $id = "";
+    try{ 
+      $this->connect();
+      $stmt = $this->conn->prepare("SELECT id FROM emails WHERE email = ?");
+      $bindPos = 0;
+      $stmt->bindParam(++$bindPos, $email, PDO::PARAM_STR);
+      $stmt->execute();
+      $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+      if($result){
+        $id = $result[0]['id'];
+      }
+    }catch(Exception $e){
+      var_dump($e);
+    }finally{
+      $stmt = $this->close();
+    }
+    return $id;
+  }
+
+  public function desuscribirse($email){
+    $result;
+    try{
+      $idEmail = $this->getEmail($email);
+      if($idEmail != ""){
+        $this->connect();
+        $stmt = $this->conn->prepare("DELETE FROM emails WHERE id = ?");
+        $bindPos = 0;
+        $stmt->bindParam(++$bindPos, $idEmail, PDO::PARAM_INT);
+        $stmt->execute();
+      }
+    }catch(Exception $e){
+      var_dump($e);
+    }finally{
+      $stmt = $this->close();
+    }
   }
 
 }

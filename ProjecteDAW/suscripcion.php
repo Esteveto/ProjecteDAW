@@ -17,35 +17,20 @@
   <body>
     
     <div class="container-fluid" style="padding-top:15px">
-      <nav class="navbar navbar-inverse">
-        <div class="navbar-header">
-        	<button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".js-navbar-collapse">
-    			<span class="sr-only">Toggle navigation</span>
-    			<span class="icon-bar"></span>
-    			<span class="icon-bar"></span>
-    			<span class="icon-bar"></span>
-    		</button>
-    		<a class="navbar-brand" href="indexAdmin.php">Mariona Dalmau</a>
-      	</div>
-
-        <div class="collapse navbar-collapse js-navbar-collapse">
-      		<ul class="nav navbar-nav">
-            <?php
-            $funcions->createNavBar(true);
-            ?>
-      		</ul>
-      	</div>
-      </nav>
+      <?php
+        //NavBar-----------------------------------------------------
+        $funcions->createNavBar(false,"suscripcion");
+      ?>
       <p>Suscribirse</p>
       <div clas="row-fluid" class=""> 
         <form method="post" action="suscribirse.php">
-          <input type="email" name="email" placeholder="Email">
+          <input type="email" name="email" placeholder="Email" required>
           <input type="submit" value="Suscribirse">
         </form>
         <br>
         <p>Desuscribirse</p>
         <form method="post" action="desuscribirse.php" enctype="multipart/form-data">
-          <input type="text" name="email" placeholder="Email">
+          <input type="text" name="email" placeholder="Email" required>
           <input type="submit" name="submit" value="Desuscribirse">
         </form>
       </div>
