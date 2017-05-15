@@ -18,7 +18,7 @@
     <div class="container-fluid" style="padding-top:15px">
       <?php
         //NavBar-----------------------------------------------------
-        $funcions->createNavBar(true);
+        $funcions->createNavBar(true, "");
       ?>
     </div>
   </body>

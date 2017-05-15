@@ -19,56 +19,92 @@
     <div class="container-fluid" style="padding-top:15px">
       <?php
         //NavBar-----------------------------------------------------
-        $funcions->createNavBar(true);
+        $funcions->createNavBar(true,"añadir");
       ?>
-      <p>Añadir Categoria</p>
-      <div clas="row-fluid" class=""> 
-        <form method="get" action="anadirCategoria.php">
-          <input type="text" name="categoria" placeholder="Nombre Categoria">
-          <input type="submit" value="Añadir Categoria">
-        </form>
-        <br>
-        <p>Añadir Album</p>
-        <form method="post" action="anadirAlbum.php" enctype="multipart/form-data">
-          <select name="categoriaPadre">
-            <?php
-            $funcions->createSelectCategories();
-            ?>
-          </select>
-          <input type="text" name="album" placeholder="Nombre Album">
-          <input type="file" name="imgs[]" multiple/>
-          <input type="submit" name="submitBtn" value="Añadir Album">
-        </form>
-        <br>
-        <p>Añadir imagenes a album</p>
-        <form method="post" action="anadirFotosAlbum.php" enctype="multipart/form-data">
-          <select name="albumPadre">
-            <?php
-            $funcions->createSelectAlbums();
-            ?>
-          </select>
-          <input type="file" name="imgs[]" multiple/>
-          <input type="submit" name="submitBtn" value="Añadir fotografias Album">
-        </form>
-        <p>Eliminar album</p>
-        <form method="post" action="eliminarAlbum.php" enctype="multipart/form-data">
-          <select name="album">
-            <?php
-            $funcions->createSelectAlbums();
-            ?>
-          </select>
-          <input type="submit" name="submitBtn" value="Eliminar Album">
-        </form>
-        <p>Eliminar categoria</p>
-        <form method="post" action="eliminarCategoria.php" enctype="multipart/form-data">
-          <select name="categoria">
-            <?php
-            $funcions->createSelectCategories();
-            ?>
-          </select>
-          <input type="submit" name="submitBtn" value="Eliminar Categoria">
-        </form>
+      
+      <div clas="row-fluid" class="">
+        <div class="col-md-6 forms">
+          <h3>Añadir Categoria</h3>
+          <?php 
+            $funcions->createCategoria();
+          ?>
+          
+          <br>
+          <h3>Añadir Álbum</h3>
+          <form method="post" action="anadirAlbum.php" enctype="multipart/form-data">
+            <a style="color: black !important; text-decoration: none !important;">Categoria:</a>
+            <select name="categoriaPadre" required>
+              <?php
+              $funcions->createSelectCategories();
+              ?>
+            </select>
+            <br><br>
+            <input class="inputForms" type="text" name="album" placeholder="Nombre Album" required>
+            <br><br>
+            <input type="file" name="imgs[]" multiple required/>
+            <br>
+            <input class="buttonForms" type="submit" name="submitBtn" value="Añadir" required>
+          </form>
+          <br>
+          <h3>Añadir imágenes a álbum</h3>
+          <form method="post" action="anadirFotosAlbum.php" enctype="multipart/form-data" required>
+            <select name="albumPadre">
+              <?php
+              $funcions->createSelectAlbums();
+              ?>
+            </select>
+            <br><br>
+            <input type="file" name="imgs[]" multiple required/>
+            <br>
+            <input class="buttonForms" type="submit" name="submitBtn" value="Añadir">
+          </form>
+          <br>
+        </div>
+        <div class="col-md-6 forms">
+          <h3>Eliminar Álbum</h3>
+          <form method="post" action="eliminarAlbum.php" enctype="multipart/form-data">
+            <select name="album" required>
+              <?php
+              $funcions->createSelectAlbums();
+              ?>
+            </select>
+            <br><br>
+            <input class="buttonForms" type="submit" name="submitBtn" value="Eliminar">
+          </form>
+          <br>
+          <h3>Eliminar Categoria</h3>
+          <form method="post" action="eliminarCategoria.php" enctype="multipart/form-data">
+            <select name="categoria" required>
+              <?php
+              $funcions->createSelectCategories();
+              ?>
+            </select>
+            <br><br>
+            <input class="buttonForms" type="submit" name="submitBtn" value="Eliminar">
+          </form>
+        </div>
       </div>
     </div>
   </body>
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <p class="textosFooter">Contacta con nosotros</p>
+                <p class="textosFooter">Quiénes somos</p>
+                <p class="textosFooter">Políticas de privacidad</p>
+                
+
+            </div>
+            <div class="col-md-6">
+                <p class="textosFooter">Redes sociales</p>
+                <a href="https://www.youtube.com"><img class="logoSocial" src="assets/youtube.png"></a>
+                <a style="padding-left:10px; padding-right:10px" href="https://www.facebook.com"><img class="logoSocial" src="assets/facebook.png"></a>
+                <a href="https://www.twitter.com"><img class="logoSocial" src="assets/instagram.png"></a>
+
+            </div>
+        </div>
+    </div>
+</footer>
 </html>

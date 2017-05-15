@@ -2,7 +2,7 @@
 	include 'funcions.php';
     $funcions = new funcionsClass();
 	$nomAlbum = $_POST['album'];
-	echo $nomAlbum;
+	//echo $nomAlbum;
 
 	$funcions->deleteAlbum($nomAlbum);
 	header('Location: indexAdmin.php');

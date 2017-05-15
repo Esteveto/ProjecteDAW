@@ -21,19 +21,60 @@
         //NavBar-----------------------------------------------------
         $funcions->createNavBar(false,"suscripcion");
       ?>
-      <p>Suscribirse</p>
-      <div clas="row-fluid" class=""> 
-        <form method="post" action="suscribirse.php">
-          <input type="email" name="email" placeholder="Email" required>
-          <input type="submit" value="Suscribirse">
-        </form>
-        <br>
-        <p>Desuscribirse</p>
-        <form method="post" action="desuscribirse.php" enctype="multipart/form-data">
-          <input type="text" name="email" placeholder="Email" required>
-          <input type="submit" name="submit" value="Desuscribirse">
-        </form>
+      
+      <div clas="row-fluid" >
+        <div class="col-md-6 forms">
+          <h3>Suscribirse</h3>
+          <form method="post" action="suscribirse.php">
+            <br>
+            <input class="inputForms" type="email" name="email" placeholder="Email" required >
+            <br><br>
+            <input class="buttonForms" type="submit" value="Suscribirse">
+
+          </form>
+        </div>
+        <div class="col-md-6 forms">
+          <h3>Anular suscripción</h3>
+          <form method="post" action="desuscribirse.php" enctype="multipart/form-data">
+            <br>
+            <input class="inputForms" type="email" name="email" placeholder="Email" required>
+            <br><br>
+            <input class="buttonForms" type="submit" name="submit" value="Anular">
+          </form>
+        </div>        
+      </div>
+      <div class="forms">
+        <?php 
+        if(isset($_GET['data'])){
+          if($_GET['data'] == "OK"){
+            echo '<h1>Suscrito correctamente!</h1>';
+          }else if($_GET['data'] == "KO"){
+            echo '<h1>Suscripción anulada!</h1>';
+          }
+          
+        }
+        ?>
       </div>
     </div>
   </body>
+
+  <footer style="margin-top:245px;">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <p class="textosFooter">Contacta con nosotros</p>
+                <p class="textosFooter">Quiénes somos</p>
+                <p class="textosFooter">Políticas de privacidad</p>
+
+            </div>
+            <div class="col-md-6">
+                <p class="textosFooter">Redes sociales</p>
+                <a href="https://www.youtube.com"><img class="logoSocial" src="assets/youtube.png"></a>
+                <a style="padding-left:10px; padding-right:10px" href="https://www.facebook.com"><img class="logoSocial" src="assets/facebook.png"></a>
+                <a href="https://www.twitter.com"><img class="logoSocial" src="assets/instagram.png"></a>
+
+            </div>
+        </div>
+    </div>
+</footer>
 </html>

@@ -20,10 +20,12 @@
   </head>
   <body>
     
-    <div class="container-fluid" style="padding-top:15px">
+    <div class="" style="padding-top:15px">
       <?php
+      $idAlbum = $_GET["album"];
+        $idCategoria = $funcions->getCategoriaAlbum($idAlbum);
         //NavBar-----------------------------------------------------
-        $funcions->createNavBar(false);
+        $funcions->createNavBar(true,$idCategoria);
       ?>
 
       <div  style="text-align:center">
@@ -60,4 +62,23 @@
 
     </div>
   </body>
+  <footer>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                <p class="textosFooter">Contacta con nosotros</p>
+                <p class="textosFooter">Quiénes somos</p>
+                <p class="textosFooter">Políticas de privacidad</p>
+                
+
+            </div>
+            <div class="col-md-6">
+                <p class="textosFooter">Redes sociales</p>
+                <a href="https://www.youtube.com"><img class="logoSocial" src="assets/youtube.png"></a>
+                <a style="padding-left:10px; padding-right:10px" href="https://www.facebook.com"><img class="logoSocial" src="assets/facebook.png"></a>
+                <a href="https://www.twitter.com"><img class="logoSocial" src="assets/instagram.png"></a>
+            </div>
+        </div>
+    </div>
+</footer>
 </html>

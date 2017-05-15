@@ -18,7 +18,7 @@ class funcionsClass{
   }
 
   public function nomAlbum(){
-    $result;
+    $result = "";
     try{
       $album = intval($_GET["album"]);
       $this->connect();
@@ -28,7 +28,11 @@ class funcionsClass{
       $stmt->execute();
       $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
       //var_dump($result);
-      $result = $result[0]['nom'];      
+      if($result){
+        $result = $result[0]['nom']; 
+      }else{
+        $result = "";
+      }
     }catch(Exception $e){
       var_dump($e);
     }finally{
@@ -39,9 +43,9 @@ class funcionsClass{
 
   public function createNavBar($admin, $categoriaActive){
     if($categoriaActive == ""){
-      echo '<nav class="navbar">';
+      echo '<nav id="navbarTop" class="navbar">';
     }else{
-      echo '<nav class="navbar navbarNoIndex">';
+      echo '<nav id="navbarTop" class="navbar navbarNoIndex">';
     }
     echo '<div class="navbar-header">
             <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".js-navbar-collapse">
@@ -50,6 +54,7 @@ class funcionsClass{
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
+            <a class="navbar-brand"><img class="logo" src="assets/LogoNegre.png"></img></a>
           <a class="navbar-brand" href="indexPublic.php">Mariona Dalmau</a>
         </div>
 
@@ -79,7 +84,6 @@ class funcionsClass{
             echo "<ul class='dropdown-menu dropdownMenuIndex'>";
           }
           
-
           $stmt2 = $this->conn->prepare("SELECT * FROM album where id_categoria = ?");
           $bindPos = 0;
           $stmt2->bindParam(++$bindPos, $value['id'], PDO::PARAM_INT);
@@ -112,8 +116,11 @@ class funcionsClass{
         }
         
         if($admin){
-        echo "<li><a href='anadir.php'>Añadir</a></li>";
-        
+          if($categoriaActive == "añadir"){
+            echo "<li class='active'><a href='anadir.php'>Añadir</a></li>";
+          }else{
+            echo "<li><a href='anadir.php'>Añadir</a></li>";
+          }
         }
       }else {
           echo "0 results";
@@ -162,7 +169,7 @@ class funcionsClass{
   }
 
   public function getCategoriaAlbum($idAlbum){
-    $idCategoria;
+    $idCategoria = 0;
     try{
       $this->connect();
       $stmt = $this->conn->prepare("SELECT id_categoria FROM album WHERE id = ?");
@@ -170,7 +177,10 @@ class funcionsClass{
       $stmt->bindParam(++$bindPos, $idAlbum, PDO::PARAM_INT);
       $stmt->execute();
       $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-      $idCategoria = $result[0]['id_categoria'];
+      if($result){
+        $idCategoria = $result[0]['id_categoria'];
+      }
+      
     }catch(Exception $e){
       var_dump($e);
     }finally{
@@ -305,6 +315,47 @@ class funcionsClass{
       foreach ($result as $key => $value) {
         echo "<option value='".$value["nom"]."'>".$value["nom"]."</option>";
       }
+    }catch(Exception $e){
+      var_dump($e);
+    }finally{
+      $stmt = $this->close();
+    }
+  }
+
+  private function countCategories(){
+    $result;
+    try{
+      $this->connect();
+      $stmt = $this->conn->prepare("SELECT COUNT(id) as ids FROM categoria");
+      $stmt->execute();
+      $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }catch(Exception $e){
+      var_dump($e);
+    }finally{
+      $stmt = $this->close();
+    }
+    return $result[0]['ids'];
+  }
+
+  public function createCategoria(){
+    try{
+      $numCategories = $this->countCategories();
+      $this->connect();
+      if($numCategories <= 5){
+        echo '<form method="get" action="anadirCategoria.php">
+            <input class="inputForms" type="text" name="categoria" placeholder="Nombre Categoria" required>
+            <br><br>
+            <input class="buttonForms" type="submit" value="Añadir">
+          </form>';
+      }else{
+        echo '<form method="get" action="anadirCategoria.php">
+            <input class="inputForms" type="text" name="categoria" placeholder="Nombre Categoria" required>
+            <br><br>
+            <input class="buttonForms" type="submit" value="Añadir" disabled>
+          </form>';
+      }
+      
+
     }catch(Exception $e){
       var_dump($e);
     }finally{
@@ -449,6 +500,7 @@ class funcionsClass{
           }
         }
       }
+      echo '<a class="scroll" href="#navbarTop"><img class="logoFixed" src="assets/flecha.png"></img></a>';
     }catch(Exception $e){
       var_dump($e);
     }finally{
@@ -508,20 +560,20 @@ class funcionsClass{
     $result;
     if(!isset($_COOKIE[$cookie_name])) {
       $cookie_value = "true";
-      setcookie($cookie_name, $cookie_value, time() + 10, "/"); 
+      setcookie($cookie_name, $cookie_value, time() + 3600, "/"); 
       //$result = "Cookie named '" . $cookie_name . "' set!";
       $result = $cookie_value;
       $this->setLikePhoto($id,true);
     }else{
       if($_COOKIE[$cookie_name] == "true"){
       $cookie_value = "false";
-      setcookie($cookie_name, $cookie_value, time() + 10, "/"); 
+      setcookie($cookie_name, $cookie_value, time() + 3600, "/"); 
          //echo "Cookie '" . $cookie_name . "' is set!<br>";
       $result = $cookie_value;
       $this->setLikePhoto($id,false);
       }else{
       $cookie_value = "true";
-      setcookie($cookie_name, $cookie_value, time() + 10, "/"); 
+      setcookie($cookie_name, $cookie_value, time() + 3600, "/"); 
          //echo "Cookie '" . $cookie_name . "' is set!<br>";
       $result = $cookie_value;
       $this->setLikePhoto($id,true);
@@ -564,7 +616,7 @@ class funcionsClass{
          ->setFrom(array('estevedalmau1@gmail.com' => 'Mariona Dalmau Info'))
          ->setTo($emails_to_send)
          ->setBody($body, 'text/html');
-      //$result = $mailer->send($message);
+      $result = $mailer->send($message);
     }catch(Exception $ex){
         //die($ex->getMessage()); //Això no funciona per algun motiu....
     }
